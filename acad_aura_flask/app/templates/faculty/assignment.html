@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+    <h3>Your Assignments</h3>
+
+    <table class="table mt-3">
+        <thead>
+            <tr><th>#</th><th>Title</th><th>Subject</th><th>Start</th><th>Deadline</th><th>Submissions</th></tr>
+        </thead>
+        <tbody>
+            {% for a in assignments %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ a.title }}</td>
+                <td>{{ a.subject }}</td>
+                <td>{{ a.start_datetime }}</td>
+                <td>{{ a.end_datetime }}</td>
+                <td>
+                    <a href="{{ url_for('faculty.view_submissions', aid=a.id) }}" class="btn btn-sm btn-info">
+                        View Submissions
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

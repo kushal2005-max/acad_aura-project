@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h3>Submissions</h3>
+  <table class="table mt-3">
+    <thead><tr><th>#</th><th>Assignment</th><th>Student</th><th>PDF</th><th>Submitted At</th></tr></thead>
+    <tbody>
+      {% for s in submissions %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ s.assignment.title if s.assignment else '—' }}</td>
+        <td>{{ (s.student.name if s.student else ('ID:' ~ s.student_id)) }}</td>
+        <td>
+          {% if s.pdf_filename %}
+            <a target="_blank" href="{{ url_for('static', filename='uploads/pdf/' ~ s.pdf_filename) }}">View PDF</a>
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ s.submitted_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

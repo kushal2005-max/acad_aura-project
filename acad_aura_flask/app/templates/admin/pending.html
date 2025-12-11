@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h3>Pending Users</h3>
+  {% if users %}
+    <table class="table mt-3">
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.role }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin.approve_user', uid=u.id) }}" style="display:inline">
+              {{ form.hidden_tag() }}  <!-- ADD CSRF TOKEN -->
+              <button class="btn btn-sm btn-success">Approve</button>
+            </form>
+            <form method="post" action="{{ url_for('admin.reject_user', uid=u.id) }}" style="display:inline">
+              {{ form.hidden_tag() }}  <!-- ADD CSRF TOKEN -->
+              <button class="btn btn-sm btn-warning">Reject</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No pending users.</p>
+  {% endif %}
+</div>
+{% endblock %}

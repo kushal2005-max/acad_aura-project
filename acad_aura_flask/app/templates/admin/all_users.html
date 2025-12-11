@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users - AcadAura</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f6fa;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            padding: 15px 25px;
+            transition: background 0.3s ease;
+        }
+        
+        .nav-links li:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .badge-admin {
+            background: #667eea;
+            color: white;
+        }
+        
+        .badge-faculty {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .badge-student {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-approved {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-pending {
+            background: #ffc107;
+            color: black;
+        }
+
+        .badge-rejected {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .btn-faculty {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-student {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .user-count {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .count-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">AcadAura Admin</div>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('admin.pending_users') }}">Pending Users</a></li>
+            <li><a href="{{ url_for('admin.all_users') }}">All Users</a></li>
+            <li><a href="{{ url_for('admin.calendar') }}">Calendar</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="header">
+            <h1>All Users</h1>
+            <p>Manage all system users</p>
+            <div class="user-count">
+                Total Users: <span class="count-badge">{{ users|length }}</span>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            {% if users %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.name or 'N/A' }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.role == 'admin' %}
+                                <span class="badge badge-admin">Admin</span>
+                            {% elif user.role == 'faculty' %}
+                                <span class="badge badge-faculty">Faculty</span>
+                            {% else %}
+                                <span class="badge badge-student">Student</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.status == 'approved' %}
+                                <span class="badge badge-approved">Approved</span>
+                            {% elif user.status == 'rejected' %}
+                                <span class="badge badge-rejected">Rejected</span>
+                            {% else %}
+                                <span class="badge badge-pending">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                {% if user.role != 'admin' %}
+                                    <!-- Approve/Reject -->
+                                    {% if user.status == 'pending' %}
+                                        <a href="{{ url_for('admin.approve_user', user_id=user.id) }}" 
+                                           class="btn btn-approve"
+                                           onclick="return confirm('Approve this user?')">
+                                            ✓ Approve
+                                        </a>
+                                        <a href="{{ url_for('admin.reject_user', user_id=user.id) }}" 
+                                           class="btn btn-reject"
+                                           onclick="return confirm('Reject this user?')">
+                                            ✗ Reject
+                                        </a>
+                                    {% endif %}
+
+                                    <!-- Make Faculty / Remove Faculty -->
+                                    {% if user.role == 'student' %}
+                                        <a href="{{ url_for('admin.make_faculty', user_id=user.id) }}" 
+                                           class="btn btn-faculty"
+                                           onclick="return confirm('Make {{ user.name or user.email }} a faculty member?')">
+                                            👨‍🏫 Make Faculty
+                                        </a>
+                                    {% elif user.role == 'faculty' %}
+                                        <a href="{{ url_for('admin.remove_faculty', user_id=user.id) }}" 
+                                           class="btn btn-student"
+                                           onclick="return confirm('Remove faculty privileges?')">
+                                            👤 Make Student
+                                        </a>
+                                    {% endif %}
+
+                                    <!-- Delete -->
+                                    <a href="{{ url_for('admin.delete_user', user_id=user.id) }}" 
+                                       class="btn btn-danger"
+                                       onclick="return confirm('Delete this user? This action cannot be undone!')">
+                                        🗑️ Delete
+                                    </a>
+                                {% else %}
+                                    <span style="color: #999;">Admin Account</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <h3>No Users Found</h3>
+                <p>There are no users in the system yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - Faculty Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .nav-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .nav-bar a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .nav-bar a:hover {
+            background: #667eea;
+            color: white;
+        }
+        .content {
+            padding: 30px;
+        }
+        .stats-banner {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .student-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        .student-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .student-info h3 {
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        .student-info p {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .student-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        .detail-value {
+            color: #777;
+        }
+        .student-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state h3 {
+            font-size: 1.8em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .empty-state p {
+            font-size: 1.1em;
+        }
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        @media (max-width: 768px) {
+            .student-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-banner {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Student Management</h1>
+            <p>View and manage your students' information</p>
+        </div>
+        
+        <div class="nav-bar">
+            <a href="{{ url_for('faculty.dashboard') }}">← Back to Dashboard</a>
+            <a href="{{ url_for('faculty.students') }}">Students</a>
+            <a href="{{ url_for('faculty.attendance') }}">Attendance</a>
+            <a href="{{ url_for('faculty.grades') }}">Grades</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </div>
+        
+        <div class="content">
+            {% if students %}
+            <div class="stats-banner">
+                <div class="stat-item">
+                    <div class="stat-number">{{ students|length }}</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ students|length }}</div>
+                    <div class="stat-label">Active Students</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchStudents" placeholder="🔍 Search students by name or email...">
+            </div>
+
+            <div class="student-grid">
+                {% for student in students %}
+                <div class="student-card">
+                    <div class="student-header">
+                        <div class="student-avatar">
+                            {{ student.name[0].upper() if student.name else 'S' }}
+                        </div>
+                        <div class="student-info">
+                            <h3>{{ student.name or 'Student' }}</h3>
+                            <p>{{ student.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Student ID:</span>
+                            <span class="detail-value">{{ student.regno or student.id }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Role:</span>
+                            <span class="detail-value">{{ student.role|capitalize }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" style="color: #28a745; font-weight: bold;">✓ {{ student.status|capitalize }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Joined:</span>
+                            <span class="detail-value">{{ student.created_at.strftime('%Y-%m-%d') if student.created_at else 'N/A' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="student-actions">
+                        <button class="btn btn-primary" onclick="viewProfile({{ student.id }})">View Profile</button>
+                        <button class="btn btn-secondary" onclick="contactStudent('{{ student.email }}')">Message</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% else %}
+            <div class="alert alert-info">
+                <strong>ℹ️ Information:</strong> No approved students found in the system yet.
+            </div>
+            
+            <div class="empty-state">
+                <h3>No Students Found</h3>
+                <p>There are currently no approved students in the system.</p>
+                <p>Students will appear here once they register and are approved by the admin.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function viewProfile(studentId) {
+            alert(`Opening profile for student ID: ${studentId}`);
+            // In real implementation:
+            // window.location.href = `/faculty/student/${studentId}`;
+        }
+
+        function contactStudent(email) {
+            alert(`Opening message for: ${email}`);
+            // In real implementation:
+            // window.location.href = `/faculty/message?to=${email}`;
+        }
+
+        // Search functionality
+        document.getElementById('searchStudents').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const studentCards = document.querySelectorAll('.student-card');
+            
+            studentCards.forEach(card => {
+                const studentName = card.querySelector('h3').textContent.toLowerCase();
+                const studentEmail = card.querySelector('.student-info p').textContent.toLowerCase();
+                
+                if (studentName.includes(searchTerm) || studentEmail.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card p-4">
+    <h3>{{ assignment.title }}</h3>
+    <p><strong>Subject:</strong> {{ assignment.subject }}</p>
+    <p><strong>Description:</strong> {{ assignment.description }}</p>
+    <p><strong>Start:</strong> {{ assignment.start_datetime }}</p>
+    <p><strong>Deadline:</strong> {{ assignment.end_datetime }}</p>
+
+    {% if current_user.role == "faculty" %}
+    <a class="btn btn-dark mt-3" href="{{ url_for('assignments.download_all', aid=assignment.id) }}">
+        Download All Submissions (ZIP)
+    </a>
+    {% endif %}
+
+    <hr>
+
+    <h4>Student Submissions</h4>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Student</th>
+                <th>PDF</th>
+                <th>Submitted At</th>
+                <th>Status</th>
+                <th>Marks</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for s in submissions %}
+            <tr>
+                <td>{{ loop.index }}</td>
+
+                <td>
+                    {{ s.student.name if s.student else ('ID:' ~ s.student_id) }}
+                </td>
+
+                <td>
+                    {% if s.pdf_filename %}
+                        <a href="{{ url_for('assignments.download_pdf', filename=s.pdf_filename) }}">
+                            Download
+                        </a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td>{{ s.submitted_at }}</td>
+
+                <td>{{ s.status }}</td>
+
+                <td>{{ s.marks if s.marks else '-' }}</td>
+
+                <td>
+                    {% if current_user.role == "faculty" %}
+                    <form method="POST"
+                          action="{{ url_for('assignments.grade_submission', sid=s.id) }}"
+                          class="d-flex gap-2">
+
+                        <input name="marks" type="number" min="0" class="form-control" placeholder="Marks"
+                               style="width: 80px" required>
+
+                        <input name="remark" class="form-control" placeholder="Remark">
+
+                        <button class="btn btn-success btn-sm">Save</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+{% endblock %}

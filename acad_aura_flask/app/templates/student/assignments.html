@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h3>All Assignments</h3>
+
+  <table class="table mt-3">
+    <thead><tr><th>#</th><th>Title</th><th>Subject</th><th>Start</th><th>Deadline</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for a in assignments %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ a.title }}</td>
+        <td>{{ a.subject }}</td>
+        <td>{{ a.start_datetime }}</td>
+        <td>{{ a.end_datetime }}</td>
+        <td>
+          <a class="btn btn-sm btn-primary" href="{{ url_for('student.submit_assignment', aid=a.id) }}">Submit</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}

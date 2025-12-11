@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <h1>AcadAura</h1>
+    <p>Your Gateway to Academic Excellence</p>
+</div>
+<div class="content">
+    <h2 style="text-align: center; color: #333; margin-bottom: 10px;">Welcome Back!</h2>
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">Please choose an option to continue</p>
+    
+    <div class="welcome-buttons">
+        <a href="{{ url_for('auth.login') }}" class="welcome-btn btn-primary">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="welcome-btn btn-secondary">Register</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card p-4">
+  <h3>Student Dashboard</h3>
+  <p>Total submitted: {{ total_submitted }}</p>
+
+  <h5 class="mt-4">Active Assignments</h5>
+  {% if assignments %}
+    <ul class="list-group mt-2">
+      {% for a in assignments %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ a.title }}</strong><br>
+            <small>{{ a.subject }}</small><br>
+            <small>Deadline: {{ a.end_datetime }}</small>
+          </div>
+          <div>
+            <a class="btn btn-primary" href="{{ url_for('student.submit_assignment', aid=a.id) }}">Submit</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No active assignments.</p>
+  {% endif %}
+</div>
+{% endblock %}

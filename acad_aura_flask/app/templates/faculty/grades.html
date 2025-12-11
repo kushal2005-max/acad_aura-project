@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades - Faculty Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px;
+        }
+        .grade-controls {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        .control-group select, .control-group input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .control-group select:focus, .control-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .grades-table th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .grades-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .grades-table tr:hover {
+            background: #f8f9fa;
+        }
+        .grade-input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .grade-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+        .grade-A { background: #d4edda; color: #155724; font-weight: bold; padding: 5px 10px; border-radius: 15px; }
+        .grade-B { background: #fff3cd; color: #856404; font-weight: bold; padding: 5px 10px; border-radius: 15px; }
+        .grade-C { background: #f8d7da; color: #721c24; font-weight: bold; padding: 5px 10px; border-radius: 15px; }
+        .grade-D { background: #e2e3e5; color: #383d41; font-weight: bold; padding: 5px 10px; border-radius: 15px; }
+        .grade-F { background: #dc3545; color: white; font-weight: bold; padding: 5px 10px; border-radius: 15px; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .average-stat { border-left-color: #3498db; }
+        .pass-stat { border-left-color: #27ae60; }
+        .fail-stat { border-left-color: #e74c3c; }
+        
+        @media (max-width: 768px) {
+            .grade-controls {
+                grid-template-columns: 1fr;
+            }
+            .grades-table {
+                font-size: 14px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Grade Management</h1>
+            <p>Manage student grades and academic performance</p>
+        </div>
+        
+        <div class="content">
+            <div class="stats-grid">
+                <div class="stat-card average-stat">
+                    <div class="stat-value">B+</div>
+                    <div class="stat-label">Average Grade</div>
+                </div>
+                <div class="stat-card pass-stat">
+                    <div class="stat-value">85%</div>
+                    <div class="stat-label">Pass Rate</div>
+                </div>
+                <div class="stat-card fail-stat">
+                    <div class="stat-value">15%</div>
+                    <div class="stat-label">Fail Rate</div>
+                </div>
+            </div>
+
+            <div class="grade-controls">
+                <div class="control-group">
+                    <label>📚 Select Course</label>
+                    <select id="courseSelect">
+                        <option value="cs101">Computer Science 101</option>
+                        <option value="math201">Mathematics 201</option>
+                        <option value="physics101">Physics 101</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>📋 Assignment Type</label>
+                    <select id="assignmentType">
+                        <option value="midterm">Midterm Exam</option>
+                        <option value="final">Final Exam</option>
+                        <option value="project">Project</option>
+                        <option value="quiz1">Quiz 1</option>
+                        <option value="quiz2">Quiz 2</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>💯 Maximum Marks</label>
+                    <input type="number" id="maxMarks" value="100" min="1" max="1000">
+                </div>
+                <div class="control-group">
+                    <button class="btn btn-primary" onclick="loadGrades()">
+                        📥 Load Grades
+                    </button>
+                </div>
+            </div>
+
+            <table class="grades-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Midterm</th>
+                        <th>Final</th>
+                        <th>Project</th>
+                        <th>Quiz 1</th>
+                        <th>Quiz 2</th>
+                        <th>Overall Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="gradesBody">
+                    <tr>
+                        <td>S001</td>
+                        <td>John Smith</td>
+                        <td><input type="number" class="grade-input" value="85" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="88" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="92" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="90" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="87" min="0" max="100"></td>
+                        <td><span class="grade-A">A-</span></td>
+                    </tr>
+                    <tr>
+                        <td>S002</td>
+                        <td>Emma Johnson</td>
+                        <td><input type="number" class="grade-input" value="92" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="95" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="90" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="94" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="93" min="0" max="100"></td>
+                        <td><span class="grade-A">A</span></td>
+                    </tr>
+                    <tr>
+                        <td>S003</td>
+                        <td>Michael Brown</td>
+                        <td><input type="number" class="grade-input" value="78" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="82" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="75" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="80" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="79" min="0" max="100"></td>
+                        <td><span class="grade-B">B+</span></td>
+                    </tr>
+                    <tr>
+                        <td>S004</td>
+                        <td>Sarah Davis</td>
+                        <td><input type="number" class="grade-input" value="65" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="70" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="68" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="62" min="0" max="100"></td>
+                        <td><input type="number" class="grade-input" value="67" min="0" max="100"></td>
+                        <td><span class="grade-C">C+</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="saveGrades()">
+                    💾 Save All Grades
+                </button>
+                <button class="btn btn-warning" onclick="calculateFinalGrades()">
+                    📊 Calculate Final Grades
+                </button>
+                <button class="btn btn-info" onclick="exportGrades()">
+                    📤 Export to CSV
+                </button>
+                <button class="btn btn-primary" onclick="generateReport()">
+                    📄 Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function saveGrades() {
+            const grades = [];
+            const rows = document.querySelectorAll('#gradesBody tr');
+            
+            rows.forEach(row => {
+                const studentId = row.cells[0].textContent;
+                const inputs = row.querySelectorAll('.grade-input');
+                const studentGrades = {
+                    studentId: studentId,
+                    midterm: inputs[0].value,
+                    final: inputs[1].value,
+                    project: inputs[2].value,
+                    quiz1: inputs[3].value,
+                    quiz2: inputs[4].value
+                };
+                grades.push(studentGrades);
+            });
+
+            console.log('Saving grades:', grades);
+            alert('Grades saved successfully!');
+            
+            // In real implementation:
+            // fetch('/api/grades/save', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(grades)
+            // });
+        }
+
+        function calculateFinalGrades() {
+            const rows = document.querySelectorAll('#gradesBody tr');
+            
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('.grade-input');
+                const grades = Array.from(inputs).map(input => parseInt(input.value) || 0);
+                const average = grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+                
+                const finalGradeCell = row.cells[7];
+                let gradeClass, gradeLetter;
+                
+                if (average >= 90) { gradeClass = 'grade-A'; gradeLetter = 'A'; }
+                else if (average >= 80) { gradeClass = 'grade-A'; gradeLetter = 'A-'; }
+                else if (average >= 75) { gradeClass = 'grade-B'; gradeLetter = 'B+'; }
+                else if (average >= 70) { gradeClass = 'grade-B'; gradeLetter = 'B'; }
+                else if (average >= 65) { gradeClass = 'grade-C'; gradeLetter = 'C+'; }
+                else if (average >= 60) { gradeClass = 'grade-C'; gradeLetter = 'C'; }
+                else if (average >= 55) { gradeClass = 'grade-D'; gradeLetter = 'D+'; }
+                else if (average >= 50) { gradeClass = 'grade-D'; gradeLetter = 'D'; }
+                else { gradeClass = 'grade-F'; gradeLetter = 'F'; }
+                
+                finalGradeCell.innerHTML = `<span class="${gradeClass}">${gradeLetter}</span>`;
+            });
+            
+            alert('Final grades calculated successfully!');
+        }
+
+        function exportGrades() {
+            alert('Grades exported to CSV file!');
+            // In real implementation:
+            // window.location.href = '/api/grades/export';
+        }
+
+        function generateReport() {
+            alert('Grade report generated!');
+            // In real implementation:
+            // window.location.href = '/api/grades/report';
+        }
+
+        function loadGrades() {
+            const course = document.getElementById('courseSelect').value;
+            alert(`Loading grades for ${course}`);
+            // In real implementation, fetch grades from server
+        }
+
+        // Auto-calculate grades when input changes
+        document.querySelectorAll('.grade-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const row = this.closest('tr');
+                const inputs = row.querySelectorAll('.grade-input');
+                const grades = Array.from(inputs).map(input => parseInt(input.value) || 0);
+                const average = grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+                
+                const finalGradeCell = row.cells[7];
+                let gradeClass, gradeLetter;
+                
+                if (average >= 90) { gradeClass = 'grade-A'; gradeLetter = 'A'; }
+                else if (average >= 80) { gradeClass = 'grade-A'; gradeLetter = 'A-'; }
+                else if (average >= 75) { gradeClass = 'grade-B'; gradeLetter = 'B+'; }
+                else if (average >= 70) { gradeClass = 'grade-B'; gradeLetter = 'B'; }
+                else if (average >= 65) { gradeClass = 'grade-C'; gradeLetter = 'C+'; }
+                else if (average >= 60) { gradeClass = 'grade-C'; gradeLetter = 'C'; }
+                else if (average >= 55) { gradeClass = 'grade-D'; gradeLetter = 'D+'; }
+                else if (average >= 50) { gradeClass = 'grade-D'; gradeLetter = 'D'; }
+                else { gradeClass = 'grade-F'; gradeLetter = 'F'; }
+                
+                finalGradeCell.innerHTML = `<span class="${gradeClass}">${gradeLetter}</span>`;
+            });
+        });
+    </script>
+</body>
+</html>
